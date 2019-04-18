@@ -6,6 +6,7 @@ import {DataService} from './services/dataService';
 import {ComponentsTable} from './components/ComponentsTable/ComponentsTable';
 import { IWbsItem } from './models/wbsItem';
 import { WbsItemsTable } from './components/WbsItemsTable/WbsItemsTable';
+import {ApiError} from './models/apiError';
 
 const apiUrl: string = 'http://localhost:4060'
 
@@ -27,15 +28,31 @@ class App extends Component<any, IState> {
     this.socketClient = socketio(apiUrl);
   }
 
-  async updateData() {
-    const components: IComponent[] = await this.dataService.fetchComponents();
-    console.log(components);
+   updateData = async () => {
+    const compResult = await this.dataService.fetchComponents();
+    if(compResult instanceof ApiError) {
+      console.log(`Api Error - ${compResult.status}: ${compResult.message}`);
+    } else {
+      this.setState({components: compResult})
+    }
 
-    const wbsItems = await this.dataService.fetchWbsItems();
-    console.log(wbsItems);
+    const wbsItemResult = await this.dataService.fetchWbsItems();
+    if(wbsItemResult instanceof ApiError) {
+      console.log(`Api Error - ${wbsItemResult.status}: ${wbsItemResult.message}`);
+    } else {
+      this.setState({wbsItems: wbsItemResult})
+    }
 
-    this.setState({components, wbsItems})
+  }
 
+  onDeleteWbsItem = async(id: string) => {
+    console.log(`In onDeleteWbsItem, id = ${id}`);
+    this.dataService.deleteWbsItem(id);
+  }
+
+  onDeleteComponent = async(id: string) => {
+    console.log(`In onDeleteComponent, id = ${id}`);
+    this.dataService.deleteComponent(id);
   }
 
   async componentDidMount() {
@@ -53,8 +70,8 @@ class App extends Component<any, IState> {
         <header className="App-header">
           Data Fetch
         </header>
-          <ComponentsTable components={this.state.components} />
-          <WbsItemsTable items={this.state.wbsItems} />
+          <ComponentsTable components={this.state.components}  onDelete={this.onDeleteComponent} />
+          <WbsItemsTable items={this.state.wbsItems} onDelete={this.onDeleteWbsItem} />
         <div>
         </div>
       </div>
