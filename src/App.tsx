@@ -50,9 +50,31 @@ class App extends Component<any, IState> {
     this.dataService.deleteWbsItem(id);
   }
 
+  onEditWbsItem = async(id: string) => {
+    console.log(`In onEditWbsItem, id = ${id}`);
+    console.log(`No yet implemented`);
+  }
+
+  onAddWbsItem = async() => {
+    console.log(`In onAddWbsItem`);
+    console.log(`No yet implemented`);
+  }
+
+
+
   onDeleteComponent = async(id: string) => {
     console.log(`In onDeleteComponent, id = ${id}`);
     this.dataService.deleteComponent(id);
+  }
+
+  onEditComponent = async(id: string) => {
+    console.log(`In onEditComponent, id = ${id}`);
+    console.log(`No yet implemented`);
+  }
+
+  onAddComponent = async() => {
+    console.log(`In onAddComponent`);
+    console.log(`No yet implemented`);
   }
 
   async componentDidMount() {
@@ -67,12 +89,17 @@ class App extends Component<any, IState> {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          Data Fetch
-        </header>
-          <ComponentsTable components={this.state.components}  onDelete={this.onDeleteComponent} />
-          <WbsItemsTable items={this.state.wbsItems} onDelete={this.onDeleteWbsItem} />
-        <div>
+        <div className="App-content">
+          <ComponentsTable components={this.state.components}  
+                           onDelete={this.onDeleteComponent} 
+                           onEdit={this.onEditComponent} 
+                           onAdd={this.onAddComponent}
+          />
+          <WbsItemsTable items={this.state.wbsItems} 
+                         onDelete={this.onDeleteWbsItem} 
+                         onEdit={this.onEditWbsItem} 
+                         onAdd={this.onAddWbsItem}
+          />
         </div>
       </div>
     );

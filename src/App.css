@@ -1,9 +1,9 @@
-.App {
-  text-align: center;
-}
+/* .App {
+} */
 
 .App-header {
-  background-color: #282c34;
+  text-align: center;
+  background-color: #1e5cd6;
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -16,11 +16,3 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}

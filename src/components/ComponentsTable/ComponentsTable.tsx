@@ -1,41 +1,39 @@
 import React from 'react';
 import {IComponent} from '../../models/component';
+import {ITableColumn} from '../../models/tableColumn';
 import {ClickableIcon} from '../ClickableIcon/ClickableIcon';
-import {faTrash} from '@fortawesome/free-solid-svg-icons';
+import {faTrash, faEdit} from '@fortawesome/free-solid-svg-icons';
 import '../styles/itemsTable.css';
+import { ItemsTable } from '../ItemsTable/ItemsTable';
+import { ITableRowAction } from '../../models/tableRowAction';
 
 interface IProps {
   components: IComponent[];
   onDelete: (id: string) => void;
+  onEdit: (id: string) => void;
+  onAdd: () => void;
 }
 
 export const ComponentsTable = (props: IProps) => {
+
+  const colDefs: ITableColumn[] = [
+    {header: "Id",           value: (comp: IComponent) => comp.id},
+    {header: "Class Name",   value: (comp: IComponent) => comp.className},
+    {header: "Tag",          value: (comp: IComponent) => comp.tag},
+    {header: "Desc",         value: (comp: IComponent) => comp.description ? comp.description : ''},
+    {header: "Manufacturer", value: (comp: IComponent) => comp.manufacturer? comp.manufacturer : ''}
+  ];
+
+  const actions: ITableRowAction[] = [
+    {action: (item: IComponent) => props.onDelete(item.id), icon: faTrash},
+    {action: (item: IComponent) => props.onEdit(item.id), icon: faEdit}
+  ];
+
   return (
-    <table className="itemsTable">
-      <thead>
-        <tr>
-          <th>Id</th>
-          <th>Class Name</th>
-          <th>Tag</th>
-          <th>Desc</th>
-          <th>Manufacturer</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {props.components.map((comp) =>
-          <tr key={comp.id}>
-            <td>{comp.id}</td>
-            <td>{comp.className}</td>
-            <td>{comp.tag}</td>
-            <td>{comp.description}</td>
-            <td>{comp.manufacturer}</td>
-            <td>
-              <ClickableIcon onClick={() => props.onDelete(comp.id)} icon={faTrash} />
-            </td>
-          </tr>
-        )}
-      </tbody>
-    </table>
+      <ItemsTable tableHeader="Components" 
+                  columns={colDefs} 
+                  items={props.components} 
+                  actions={actions} 
+                  onAddItem={props.onAdd} />
   );
 }
