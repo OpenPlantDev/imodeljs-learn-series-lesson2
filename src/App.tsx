@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {BrowserRouter as Router, Route, Switch, Link} from 'react-router-dom';
 import socketio from 'socket.io-client';
 import './App.css';
 import {IComponent} from './models/component';
@@ -7,6 +8,7 @@ import {ComponentsTable} from './components/ComponentsTable/ComponentsTable';
 import { IWbsItem } from './models/wbsItem';
 import { WbsItemsTable } from './components/WbsItemsTable/WbsItemsTable';
 import {ApiError} from './models/apiError';
+import {Home} from './components/Home/Home';
 
 const apiUrl: string = 'http://localhost:4060'
 
@@ -88,20 +90,36 @@ class App extends Component<any, IState> {
 
   render() {
     return (
-      <div className="App">
-        <div className="App-content">
-          <ComponentsTable components={this.state.components}  
-                           onDelete={this.onDeleteComponent} 
-                           onEdit={this.onEditComponent} 
-                           onAdd={this.onAddComponent}
-          />
-          <WbsItemsTable items={this.state.wbsItems} 
-                         onDelete={this.onDeleteWbsItem} 
-                         onEdit={this.onEditWbsItem} 
-                         onAdd={this.onAddWbsItem}
-          />
-        </div>
+      <Router>
+        <div className="App">
+          <header className="App-header">
+            <nav>
+              <ul>
+                <li><Link className="link" to="/">Home</Link></li>
+                <li><Link className="link" to="/components">Components</Link></li>
+                <li><Link className="link" to="/wbsItems">WBS</Link></li>
+              </ul>
+            </nav>
+          </header>
+          <div className="App-content">
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route exact path="/components" render={((props) => 
+                <ComponentsTable components={this.state.components}  
+                onDelete={this.onDeleteComponent} 
+                onEdit={this.onEditComponent} 
+                onAdd={this.onAddComponent}/>
+              )} />
+            <Route exact path="/wbsitems" render={((props) => 
+                <WbsItemsTable items={this.state.wbsItems} 
+                  onDelete={this.onDeleteWbsItem} 
+                  onEdit={this.onEditWbsItem} 
+                  onAdd={this.onAddWbsItem} />
+             )} />
+        </Switch>
+          </div>
       </div>
+    </Router>
     );
   }
 }
